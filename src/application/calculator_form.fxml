@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<VBox fx:id="calc" prefHeight="700.0" prefWidth="500" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CalculatorFormController">
+<VBox fx:id="calc" prefHeight="750.0" prefWidth="500" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CalculatorFormController">
    <children>
       <ScrollPane fx:id="scroll" hbarPolicy="NEVER" maxHeight="200" prefHeight="200">
          <content>
