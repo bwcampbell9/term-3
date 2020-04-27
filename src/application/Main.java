@@ -21,7 +21,8 @@ public void start(Stage primaryStage) throws IOException {
         
         Alert a = new Alert(AlertType.INFORMATION);
         a.setHeaderText("Tip");
-        a.setContentText("You can click the result of a calculation to use it again."); 
+        a.setContentText("Use the buttons or the keyboard to enter your equation. It can be as long as you would like.\n\n" + 
+        		"You can also click the result of a calculation in your calculation history to use it again."); 
         a.show();
 	}
 	

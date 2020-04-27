@@ -2,10 +2,6 @@ package application;
 
 import java.text.DecimalFormat;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,14 +10,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Window;
 
 public class CalculatorFormController {
 	private String equation = "";
@@ -52,7 +44,9 @@ public class CalculatorFormController {
             		equation += event.getCharacter();
             		equationLabel.setText(equation);
             	} else if (event.getCharacter().charAt(0) == 8) {
-            		equation = equation.substring(0, equation.length() - 1);
+            		if ((equation != null) && (equation.length() > 0)) {
+                		equation = equation.substring(0, equation.length() - 1);
+                	}
             		equationLabel.setText(equation);
             	}
             }
@@ -71,6 +65,8 @@ public class CalculatorFormController {
     		return;
     	}
     	Label eq = new Label(equation);
+    	eq.getStyleClass().add("wide");
+    	eq.setAlignment(Pos.CENTER_RIGHT);
     	histBox.getChildren().add(eq);
     	try {
     		Label res = new Label(String.valueOf(df.format(eval(equation))));
@@ -83,16 +79,17 @@ public class CalculatorFormController {
 
     		});
     		res.setAlignment(Pos.CENTER_LEFT);
+    		res.getStyleClass().add("wide");
     		histBox.getChildren().add(res);
 		} catch (RuntimeException e) {
     		Label res = new Label("Err");
     		res.setAlignment(Pos.CENTER_LEFT);
+    		res.getStyleClass().add("wide");
     		histBox.getChildren().add(res);
     		Alert a = new Alert(AlertType.ERROR);
             a.setContentText(e.getMessage()); 
             a.show(); 
 		}
-    	eq.setAlignment(Pos.CENTER_RIGHT);
 		
 		equation = "";
         equationLabel.setText(equation);
@@ -116,6 +113,8 @@ public class CalculatorFormController {
     /*** Parsing equation written by Boann and found here:
      * 		https://stackoverflow.com/questions/3422673/how-to-evaluate-a-math-expression-given-in-string-form
      * 
+     * 	logarithms and inverse trig functions added by Bryce Campbell (me)
+     * 
      * 	Released to the public domain under the creative commons license CC1.0
      * 
      * @param str: the expression to parse
@@ -123,7 +122,8 @@ public class CalculatorFormController {
      */
     public static double eval(final String str) {
         return new Object() {
-            int pos = -1, ch;
+            int pos = -1;
+            int ch;
 
             void nextChar() {
                 ch = (++pos < str.length()) ? str.charAt(pos) : -1;
@@ -186,9 +186,14 @@ public class CalculatorFormController {
                     String func = str.substring(startPos, this.pos);
                     x = parseFactor();
                     if (func.equals("sqrt")) x = Math.sqrt(x);
+                    else if (func.equals("ln")) x = Math.log(x);
+                    else if (func.equals("log")) x = Math.log10(x);
                     else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
                     else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
                     else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
+                    else if (func.equals("asin")) x = Math.toDegrees(Math.asin(x));
+                    else if (func.equals("acos")) x = Math.toDegrees(Math.acos(x));
+                    else if (func.equals("atan")) x = Math.toDegrees(Math.atan(x));
                     else throw new RuntimeException("Unknown function: " + func);
                 } else {
                     throw new RuntimeException("Unexpected: " + (char)ch);
